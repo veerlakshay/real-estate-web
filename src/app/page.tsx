@@ -6,7 +6,6 @@ export default function Home() {
     <div className="min-h-screen">
       <HeroSection />
       <FeaturedProperties />
-      {/* More sections will be added here */}
     </div>
   );
 }

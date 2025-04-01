@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const geist = Geist({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "DreamHome - Find Your Perfect Property",
-  description: "Browse and find your dream home with our real estate platform",
+  title: "DreamHome - Real Estate",
+  description: "Find your perfect home",
 };
 
 export default function RootLayout({
@@ -26,9 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+      <body className={`${geist.className} min-h-screen flex flex-col`}>
         <Navbar />
-        <main className="pt-16 flex-grow">
+        <main className="flex-grow">
           {children}
         </main>
         <Footer />
