@@ -1,32 +1,37 @@
-import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import "./globals.css";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import ClientLayout from './components/layout/ClientLayout';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import SupabaseProvider from '@/providers/SupabaseProvider';
 
-const geist = Geist({
-  subsets: ["latin"],
+const inter = Inter({
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "DreamHome - Real Estate",
-  description: "Find your perfect home",
+    title: "DreamHome - Real Estate",
+    description: "Find your perfect home",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body className={`${geist.className} min-h-screen flex flex-col`}>
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
-  );
+export default async function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const supabase = createServerComponentClient({ cookies });
+    const { data: { session } } = await supabase.auth.getSession();
+
+    return (
+        <html lang="en">
+            <body className={inter.className}>
+                <SupabaseProvider initialSession={session}>
+                    <ClientLayout>
+                        {children}
+                    </ClientLayout>
+                </SupabaseProvider>
+            </body>
+        </html>
+    );
 }

@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useSession } from '@supabase/auth-helpers-react';
 
 // Define navigation items interface for type safety
 interface NavItem {
@@ -19,8 +22,17 @@ const navItems: NavItem[] = [
 ];
 
 const Navbar = () => {
+    const router = useRouter();
+    const supabase = createClientComponentClient();
+    const session = useSession();
+
     // State for mobile menu toggle
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut();
+        router.refresh();
+    };
 
     return (
         <nav className="fixed top-0 w-full bg-white shadow-sm z-50">
@@ -89,6 +101,25 @@ const Navbar = () => {
                                 </svg>
                             )}
                         </button>
+                    </div>
+
+                    {/* Authentication buttons */}
+                    <div className="flex items-center">
+                        {session ? (
+                            <button
+                                onClick={handleSignOut}
+                                className="ml-4 px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                            >
+                                Sign Out
+                            </button>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="ml-4 px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
